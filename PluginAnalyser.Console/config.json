@@ -1,0 +1,118 @@
+﻿{
+  "files": [
+    "PluginAnalyser.Console.exe",
+    "PluginAnalyser.Lib.dll"
+  ],
+  "filesxxxxx": [
+    "PluginAnalyser.Console.exe",
+    "PluginAnalyser.Lib.dll",
+    "TerraPvP.dll",
+    "UnlimitedInventories.dll",
+    "TerraJump.dll",
+    "TSDocs.dll"
+  ],
+
+  "analysers": [
+    {
+      "id": "file",
+      "type": "AssemblyClassUsage",
+      "args": [ "System.IO.File" ],
+      "displayMessage": "File interations detected",
+      "severity": "Info"
+    },
+    {
+      "type": "AssemblyClassUsage",
+      "args": [ "System.Diagnostics.Process" ],
+      "displayMessage": "Process manipulation detected",
+      "severity": "Warning"
+    },
+    {
+      "id": "net",
+      "type": "AssemblyClassUsage",
+      "args": [ "System.Net.WebClient" ],
+      "displayMessage": "External networking detected",
+      "severity": "Warning"
+    },
+    {
+      "id": "process",
+      "type": "AssemblyMethodUsage",
+      "args": [ "System.Diagnostics.Process.Start" ],
+      "displayMessage": "Custom processes are started.",
+      "severity": "Warning"
+    },
+    {
+      "id": "net",
+      "type": "AssemblyNameSpaceUsage",
+      "args": [ "System.Net" ],
+      "displayMessage": "Networking detected.",
+      "severity": "Warning"
+    },
+    {
+      "id": "embedded-resource",
+      "type": "AssemblyEmbeddedResourceUsage",
+      "args": [],
+      "displayMessage": "Embedded resource.",
+      "severity": "Warning"
+    },
+    {
+      "id": "dllimport",
+      "type": "AssemblyAttributeUsage",
+      "args": [ "System.Runtime.InteropServices.DllImportAttribute" ],
+      "displayMessage": "DllImport usage.",
+      "severity": "Warning"
+    },
+    {
+      "id": "test",
+      "type": "AssemblyAttributeUsage",
+      "args": [ "Resource.Test.FlaggedMethodAttribute" ],
+      "displayMessage": "Test attribute usage.",
+      "severity": "Error"
+    },
+    {
+      "id": "test",
+      "type": "AssemblyAttributeUsage",
+      "args": [ "Resource.Test.FlaggedClassAttribute" ],
+      "displayMessage": "Test attribute usage.",
+      "severity": "Error"
+    }
+  ],
+
+  "comments": "postAnalysers are to be ran across files to ensure exeA doesnt get a resource from dllB",
+  "postAnalysers": [
+    {
+      "when": [ "net", "process" ],
+      "then": {
+        "displayMessage": "Internet activity and process manipulation detected",
+        "severity": "Error"
+      }
+    },
+    {
+      "when": [ "embedded-resource", "process" ],
+      "then": {
+        "displayMessage": "Embedded resources and process manipulation detected",
+        "severity": "Error"
+      }
+    },
+    {
+      "when": [ "embedded-resource" ],
+      "then": {
+        "displayMessage": "Embedded resources found - it could be running malicious code",
+        "severity": "Error"
+      }
+    },
+    {
+      "when": [ "net", "dllimport" ],
+      "then": {
+        "displayMessage": "Internet activity and native binaries detected",
+        "severity": "Error"
+      }
+    },
+    {
+      "when": [ "embedded-resource", "dllimport" ],
+      "then": {
+        "displayMessage": "Embedded resources and native binaries detected",
+        "severity": "Error"
+      }
+    }
+  ]
+}
