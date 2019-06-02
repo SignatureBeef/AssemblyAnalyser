@@ -107,7 +107,7 @@
                     iframe = document.createElement('iframe');
                     window.analyserIframe = iframe;
                 }
-                iframe.src = 'data:text/html;charset=utf-8,' + encodeURI(res);
+                iframe.src = 'data:text/html;charset=utf-8,' + encodeURIComponent(res);
                 results.appendChild(iframe);
 
                 bar.set(0);
